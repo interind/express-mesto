@@ -1,0 +1,29 @@
+{
+  "name": "express-mesto",
+  "version": "1.0.0",
+  "description": "node express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/interind/express-mesto.git"
+  },
+  "author": "Bannykh Alexander <interind@yandex.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/interind/express-mesto/issues"
+  },
+  "homepage": "https://github.com/interind/express-mesto#readme",
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
