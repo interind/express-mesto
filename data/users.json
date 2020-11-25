@@ -34,5 +34,12 @@
     "about": "Engineer, inventor",
     "avatar": "https://images.fineartamerica.com/images-medium-large-5/douglas-engelbart-emilio-segre-visual-archivesamerican-institute-of-physics.jpg",
     "_id": "3c8c16ee9b1f89a2f8b5e4b2"
+  },
+  {
+  "name": "Александр",
+  "about": "Студент",
+  "avatar":
+    "https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=866&q=80",
+  "_id": "066c34d31720ba2fb9acb601"
   }
 ]

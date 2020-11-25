@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const router = require('express').Router();
 
-const cards = [];
-
 router.get('/cards', (req, res) => {
   // if (!cards[req.params.id]) {
   //   res.send({ error: 'Такого пользователя нет' });
