@@ -5,7 +5,8 @@
     "require-jsdoc": "off",
     "no-underscore-dangle": "off",
     "no-unused-vars": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "quotes": "off"
   },
   "extends": "airbnb-base"
 }
