@@ -10,9 +10,8 @@ router.get('/cards', (req, res) => {
   fs.readFile(path.join(__dirname, '..', 'data', 'cards.json'),
     'utf8', (err, data) => {
       if (err) throw err;
-      const arr = [data];
-      const str = arr.join(", ");
-      res.status(200).send(str);
+      const arr = JSON.parse(data);
+      res.status(200).send(arr);
     });
 });
 
