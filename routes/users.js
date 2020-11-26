@@ -24,7 +24,6 @@ router.get('/:id', (req, res) => {
       return;
     }
     users = Array.from(JSON.parse(data));
-
     if (users.some((i) => i._id === req.params.id)) {
       const user = users.filter((item) => item._id === req.params.id);
       res.status(200).send(...user);
