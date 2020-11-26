@@ -9,7 +9,7 @@ let users = {};
 router.get('/', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send({ message: `"${err}"` });
+      res.status(500).send({ message: err.message });
       return;
     }
     users = Array.from(JSON.parse(data));
@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send({ message: `"${err}"` });
+      res.status(500).send({ message: err.message });
       return;
     }
     users = Array.from(JSON.parse(data));
