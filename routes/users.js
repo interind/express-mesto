@@ -9,7 +9,7 @@ let users = {};
 router.get('/', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'Ошибка чтения файла' });
       return;
     }
     users = Array.from(JSON.parse(data));
@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'Ошибка чтения файла' });
       return;
     }
     users = Array.from(JSON.parse(data));
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
       const user = users.filter((item) => item._id === req.params.id);
       res.status(200).send(...user);
     } else {
-      res.status(404).send({ message: "Нет пользователя с таким id" });
+      res.status(404).send({ message: 'Нет пользователя с таким id' });
     }
   });
 });

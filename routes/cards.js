@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
   fs.readFile(path.join(__dirname, '..', 'data', 'cards.json'),
     'utf8', (err, data) => {
       if (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({ message: 'Ошибка чтения файла с карточками!' });
         return;
       }
       const cards = JSON.parse(data);
