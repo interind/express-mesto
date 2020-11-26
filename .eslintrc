@@ -1,12 +1,7 @@
 
 {
   "rules": {
-    "object-curly-spacing": "off",
-    "require-jsdoc": "off",
-    "no-underscore-dangle": "off",
-    "no-unused-vars": "off",
-    "no-console": "off",
-    "quotes": "off"
+    "no-underscore-dangle": "off"
   },
   "extends": "airbnb-base"
 }
