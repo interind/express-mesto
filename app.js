@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
+const ID = require('./utils/constants.js');
 
 const PORT = process.env.PORT || 3000;
 const { BASE_PATH = `http://localhost:${PORT}` } = process.env;
@@ -21,7 +22,7 @@ async function start() {
       console.log(`the server is running at ${BASE_PATH}`);
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 app.use((req, res, next) => {
@@ -34,11 +35,15 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use((req, res, next) => {
+  req.user = ID;
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/users', routerUsers);
-app.use('/cards', routerCards);
-app.use('*', routerError);
+app.use(routerUsers);
+app.use(routerCards);
+app.use(routerError);
 
 start();

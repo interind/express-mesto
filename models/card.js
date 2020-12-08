@@ -12,8 +12,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(link) {
-        return regHttp.test(link);
+      validator(v) {
+        return regHttp.test(v);
       },
       message: 'Ошибка в ссылке Карточки',
     },
@@ -24,8 +24,9 @@ const cardSchema = new mongoose.Schema({
     ref: 'user',
   },
   likes: {
-    type: Array,
+    type: [mongoose.Schema.Types.ObjectId],
     default: [],
+    ref: 'user',
   },
   createAt: {
     type: String,
