@@ -1,6 +1,7 @@
 const router = require('express').Router();
+const { ERROR_CODE_NOT_FOUND } = require('../utils/constants.js');
 
 router.get('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 module.exports = router;

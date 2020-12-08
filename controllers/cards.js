@@ -1,4 +1,9 @@
 const Card = require('../models/card');
+const {
+  ERROR_CODE_CORRECT,
+  ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
+} = require('../utils/constants.js');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -7,9 +12,9 @@ module.exports.getCards = (req, res) => {
       if (cards.length !== 0) {
         return res.send({ data: cards });
       }
-      return res.status(404).send({ message: 'карточек нет' });
+      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'карточек нет' });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -22,7 +27,7 @@ module.exports.createCard = (req, res) => {
     name, link, likes, createAt, owner,
   })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -31,8 +36,8 @@ module.exports.deleteCard = (req, res) => {
       if (card !== null) {
         return res.send({ message: 'карточка удалена' });
       }
-      return res.status(404).send({ message: 'такой карточки нет' });
-    }).catch((err) => res.status(500).send({ message: err.message }));
+      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такой карточки нет' });
+    }).catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -42,7 +47,7 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -52,5 +57,5 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };

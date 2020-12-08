@@ -1,4 +1,9 @@
 const User = require('../models/user');
+const {
+  ERROR_CODE_CORRECT,
+  ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
+} = require('../utils/constants.js');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -6,9 +11,9 @@ module.exports.getUsers = (req, res) => {
       if (users.length !== 0) {
         return res.send({ data: users });
       }
-      return res.status(404).send({ message: 'пользователей нет' });
+      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'пользователей нет' });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.getUser = (req, res) => {
@@ -17,9 +22,9 @@ module.exports.getUser = (req, res) => {
       if (user !== null) {
         return res.send({ data: user });
       }
-      return res.status(404).send({ message: 'такого пользователя нет' });
+      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такого пользователя нет' });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.createUser = (req, res) => {
@@ -27,7 +32,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
 };
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
@@ -42,7 +47,7 @@ module.exports.updateUser = (req, res) => {
     },
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
 };
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
@@ -57,5 +62,5 @@ module.exports.updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
 };
