@@ -1,15 +1,15 @@
-const path = require('path');
-const getDataFromFile = require('../helpers/files');
+const User = require('../models/user');
 
-const dataPath = path.join(__dirname, '..', 'data', 'users.json');
-
-const getUsers = (req, res) => {
-  getDataFromFile(dataPath)
-    .then((data) => {
-      const users = Array.from(data);
-      res.status(200).send(users);
-    })
+module.exports.getUsers = (req, res) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-module.exports = getUsers;
+module.exports.createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({ name, about, avatar })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
