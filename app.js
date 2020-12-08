@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
-const ID = require('./utils/constants.js');
+const _id = require('./utils/constants.js');
 
 const PORT = process.env.PORT || 3000;
 const { BASE_PATH = `http://localhost:${PORT}` } = process.env;
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use((req, res, next) => {
-  req.user = ID;
+  req.user = _id;
   next();
 });
 
