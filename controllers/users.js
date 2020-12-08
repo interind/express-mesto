@@ -19,3 +19,6 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
+
+// PATCH /users/me — обновляет профиль
+// PATCH /users/me/avatar — обновляет аватар
