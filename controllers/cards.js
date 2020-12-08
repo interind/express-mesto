@@ -3,7 +3,12 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
-    .then((cards) => res.send(cards.length !== 0 ? { data: cards } : { message: 'карточек нет' }))
+    .then((cards) => {
+      if (cards.length !== 0) {
+        return res.send({ data: cards });
+      }
+      return res.status(404).send({ message: 'карточек нет' });
+    })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -17,23 +22,23 @@ module.exports.createCard = (req, res) => {
     name, link, likes, createAt, owner,
   })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (card !== null) {
-        res.send({ message: 'карточка удалена' });
+        return res.send({ message: 'карточка удалена' });
       }
-      res.status(404).send({ message: 'такой карточки нет' });
+      return res.status(404).send({ message: 'такой карточки нет' });
     }).catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => res.send({ data: card }))
@@ -43,7 +48,7 @@ module.exports.likeCard = (req, res) => {
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => res.send({ data: card }))

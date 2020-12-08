@@ -2,7 +2,12 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => {
+      if (users.length !== 0) {
+        return res.send({ data: users });
+      }
+      return res.status(404).send({ message: 'пользователей нет' });
+    })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -10,9 +15,9 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user !== null) {
-        res.send({ data: user });
+        return res.send({ data: user });
       }
-      res.status(403).send({ message: 'такого пользователя нет' });
+      return res.status(404).send({ message: 'такого пользователя нет' });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
@@ -22,8 +27,35 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
+module.exports.updateUser = (req, res) => {
+  const { name, about } = req.body;
 
-// PATCH /users/me — обновляет профиль
-// PATCH /users/me/avatar — обновляет аватар
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true,
+    },
+  )
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(400).send({ message: err.message }));
+};
+module.exports.updateUserAvatar = (req, res) => {
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true,
+    },
+  )
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(400).send({ message: err.message }));
+};
