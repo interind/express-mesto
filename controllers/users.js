@@ -37,8 +37,14 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
+
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
@@ -59,6 +65,7 @@ module.exports.updateUser = (req, res) => {
       return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
     });
 };
+
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
