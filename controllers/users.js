@@ -13,7 +13,7 @@ module.exports.getUsers = (req, res) => {
       }
       return res.send({ message: 'пользователей нет' });
     })
-    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+    .catch((err) => res.send({ message: err.name }));
 };
 
 module.exports.getUser = (req, res) => {
@@ -24,7 +24,12 @@ module.exports.getUser = (req, res) => {
       }
       return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такого пользователя нет' });
     })
-    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -47,7 +52,12 @@ module.exports.updateUser = (req, res) => {
     },
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
@@ -62,6 +72,10 @@ module.exports.updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
-// if (err.name === 'ValidationError') return res.status(400).send(message: ...)

@@ -24,10 +24,17 @@ module.exports.createCard = (req, res) => {
   } = req.body;
 
   Card.create({
-    name, link, owner,
+    name,
+    link,
+    owner,
   })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -36,8 +43,16 @@ module.exports.deleteCard = (req, res) => {
       if (card !== null) {
         return res.send({ message: 'карточка удалена' });
       }
-      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такой карточки нет' });
-    }).catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+      return res
+        .status(ERROR_CODE_NOT_FOUND)
+        .send({ message: 'такой карточки нет' });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -46,8 +61,20 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+    .then((card) => {
+      if (card !== null) {
+        return res.send({ data: card });
+      }
+      return res
+        .status(ERROR_CODE_NOT_FOUND)
+        .send({ message: 'такой карточки нет' });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -56,6 +83,18 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+    .then((card) => {
+      if (card !== null) {
+        return res.send({ data: card });
+      }
+      return res
+        .status(ERROR_CODE_NOT_FOUND)
+        .send({ message: 'такой карточки нет' });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+      }
+      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+    });
 };
