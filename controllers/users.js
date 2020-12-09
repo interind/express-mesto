@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res) => {
       if (users.length !== 0) {
         return res.send({ data: users });
       }
-      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'пользователей нет' });
+      return res.send({ message: 'пользователей нет' });
     })
     .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
@@ -64,3 +64,4 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
 };
+// if (err.name === 'ValidationError') return res.status(400).send(message: ...)

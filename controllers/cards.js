@@ -12,7 +12,7 @@ module.exports.getCards = (req, res) => {
       if (cards.length !== 0) {
         return res.send({ data: cards });
       }
-      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'карточек нет' });
+      return res.send({ message: 'карточек нет' });
     })
     .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
