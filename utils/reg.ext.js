@@ -1,1 +1,1 @@
-module.exports.regHttp = /ht{2}ps?:\/\/\w+\S+/gmi;
+module.exports.regHttp = /^(www.)?https?:\/\/\w+\S+#?$/gim;
