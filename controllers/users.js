@@ -7,19 +7,14 @@ const {
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => {
-      if (users.length !== 0) {
-        return res.send({ data: users });
-      }
-      return res.send({ message: 'пользователей нет' });
-    })
+    .then((users) => res.send({ data: users }))
     .catch((err) => res.send({ message: err.name }));
 };
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      if (user !== null) {
+      if (user) {
         return res.send({ data: user });
       }
       return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такого пользователя нет' });
@@ -54,7 +49,6 @@ module.exports.updateUser = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send({ data: user }))
@@ -75,7 +69,6 @@ module.exports.updateUserAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send({ data: user }))

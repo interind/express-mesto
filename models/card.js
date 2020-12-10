@@ -12,11 +12,9 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return regHttp.test(v);
-      },
-      message: 'Ошибка в ссылке Карточки',
+      validator: (v) => regHttp.test(v),
     },
+    message: 'Ошибка в ссылке Карточки',
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

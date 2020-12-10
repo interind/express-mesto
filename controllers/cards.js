@@ -8,12 +8,7 @@ const {
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
-    .then((cards) => {
-      if (cards.length !== 0) {
-        return res.send({ data: cards });
-      }
-      return res.send({ message: 'карточек нет' });
-    })
+    .then((cards) => res.send({ data: cards }))
     .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
@@ -40,7 +35,7 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      if (card !== null) {
+      if (card) {
         return res.send({ message: 'карточка удалена' });
       }
       return res
@@ -62,7 +57,7 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      if (card !== null) {
+      if (card) {
         return res.send({ data: card });
       }
       return res
@@ -84,7 +79,7 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      if (card !== null) {
+      if (card) {
         return res.send({ data: card });
       }
       return res

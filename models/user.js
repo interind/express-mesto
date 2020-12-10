@@ -18,11 +18,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return regHttp.test(v);
-      },
-      message: 'Ошибка в ссылке Аватара',
+      validator: (v) => regHttp.test(v),
     },
+    message: 'Ошибка в ссылке Аватара',
   },
 });
 
