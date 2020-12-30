@@ -1,0 +1,8 @@
+{
+  "_id": "5fcf5fc93863b41634094d81",
+  "mongodbUrl": "mongodb://localhost:27017/mestodb",
+  "PORT": 3000,
+  "ERROR_CORRECT": 400,
+  "ERROR_NOT_FOUND": 404,
+  "ERROR_DEFAULT": 500
+}

@@ -1,19 +1,21 @@
 /* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('config');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
-const _id = require('./utils/constants.js');
 
-const PORT = process.env.PORT || 3000;
-const { BASE_PATH = `http://localhost:${PORT}` } = process.env;
+const PORT = config.get('PORT') || 3000;
+const BASE_PATH = `http://localhost:${PORT}`;
 const app = express();
+const _id = config.get('_id');
+const mongodbUrl = config.get('mongodbUrl');
 
 async function start() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+    await mongoose.connect(mongodbUrl, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
@@ -23,10 +25,11 @@ async function start() {
     });
   } catch (err) {
     console.error(err);
+    process.exitCode = 1;
   }
 }
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', `${BASE_PATH}`);
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',

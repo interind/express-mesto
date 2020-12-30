@@ -1,9 +1,9 @@
+const config = require('config');
 const Card = require('../models/card');
-const {
-  ERROR_CODE_CORRECT,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_DEFAULT,
-} = require('../utils/constants.js');
+
+const ERROR_CODE_CORRECT = config.get('ERROR_CORRECT');
+const ERROR_CODE_NOT_FOUND = config.get('ERROR_NOT_FOUND');
+const ERROR_CODE_DEFAULT = config.get('ERROR_DEFAULT');
 
 module.exports.getCards = (req, res) => {
   Card.find({})

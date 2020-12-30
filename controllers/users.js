@@ -1,9 +1,18 @@
+const config = require('config');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const {
-  ERROR_CODE_CORRECT,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_DEFAULT,
-} = require('../utils/constants.js');
+
+const ERROR_CODE_CORRECT = config.get('ERROR_CORRECT');
+const ERROR_CODE_NOT_FOUND = config.get('ERROR_NOT_FOUND');
+const ERROR_CODE_DEFAULT = config.get('ERROR_DEFAULT');
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => res.send({ token: user._id })) // токен ответ
+    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+};
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -17,20 +26,36 @@ module.exports.getUser = (req, res) => {
       if (user) {
         return res.send({ data: user });
       }
-      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такого пользователя нет' });
+      return res
+        .status(ERROR_CODE_NOT_FOUND)
+        .send({ message: 'Такого пользователя нет!⚠️' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(ERROR_CODE_CORRECT)
+          .send({ message: 'Ошибка id пользователя!⚠️' });
       }
       return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
     });
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body; // нужно хэшировать пароль.
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, 10).then((hash) => User.create({
+    name,
+    about,
+    avatar,
+    email,
+    password: hash,
+  }))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
