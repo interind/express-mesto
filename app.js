@@ -10,7 +10,7 @@ const routerError = require('./routes/error.js');
 const PORT = config.get('PORT') || 3000;
 const BASE_PATH = `http://localhost:${PORT}`;
 const app = express();
-const _id = config.get('_id');
+const _id = config.get('id');
 const mongodbUrl = config.get('mongodbUrl');
 
 async function start() {
