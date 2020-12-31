@@ -1,17 +1,19 @@
 const config = require('config');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
-const ERROR_CODE_CORRECT = config.get('ERROR_CORRECT');
-const ERROR_CODE_NOT_FOUND = config.get('ERROR_NOT_FOUND');
-const ERROR_CODE_DEFAULT = config.get('ERROR_DEFAULT');
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .then((user) => res.send({ token: user._id })) // токен ответ
-    .catch((err) => res.status(ERROR_CODE_CORRECT).send({ message: err.message }));
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, config.get('secretKey'), {
+        expiresIn: '7d',
+      });
+      res.send({ token });
+    })
+    .catch((err) => res.status(config.get('Unauthorized')).send({ message: err.message }));
 };
 
 module.exports.getUsers = (req, res) => {
@@ -27,16 +29,16 @@ module.exports.getUser = (req, res) => {
         return res.send({ data: user });
       }
       return res
-        .status(ERROR_CODE_NOT_FOUND)
+        .status(config.get('NotFound'))
         .send({ message: 'Такого пользователя нет!⚠️' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(ERROR_CODE_CORRECT)
+          .status(config.get('BadRequest'))
           .send({ message: 'Ошибка id пользователя!⚠️' });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('Default')).send({ message: err.message });
     });
 };
 
@@ -59,9 +61,11 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('BadRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('Default')).send({ message: err.message });
     });
 };
 
@@ -79,9 +83,11 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('BadRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('Default')).send({ message: err.message });
     });
 };
 
@@ -99,8 +105,10 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('BadRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('Default')).send({ message: err.message });
     });
 };

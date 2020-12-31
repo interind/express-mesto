@@ -1,8 +1,10 @@
 {
   "id": {"_id": "5fec8621563cce029c1997ba"},
   "mongodbUrl": "mongodb://localhost:27017/mestodb",
+  "secretKey": "hello world",
   "PORT": 3000,
-  "ERROR_CORRECT": 400,
-  "ERROR_NOT_FOUND": 404,
-  "ERROR_DEFAULT": 500
+  "BadRequest": 400,
+  "Unauthorized": 401,
+  "NotFound": 404,
+  "Default": 500
 }
