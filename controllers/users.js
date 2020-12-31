@@ -29,7 +29,7 @@ module.exports.getUser = (req, res) => {
         return res.send({ data: user });
       }
       return res
-        .status(config.get('NotFound'))
+        .status(config.get('doNotFind'))
         .send({ message: 'Такого пользователя нет!⚠️' });
     })
     .catch((err) => {

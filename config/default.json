@@ -5,6 +5,6 @@
   "PORT": 3000,
   "BadRequest": 400,
   "Unauthorized": 401,
-  "NotFound": 404,
+  "doNotFind": 404,
   "Default": 500
 }

@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
         return res.send({ message: 'карточка удалена' });
       }
       return res
-        .status(config.get('NotFound'))
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
@@ -62,7 +62,7 @@ module.exports.likeCard = (req, res) => {
         return res.send({ data: card });
       }
       return res
-        .status(config.get('NotFound'))
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
@@ -86,7 +86,7 @@ module.exports.dislikeCard = (req, res) => {
         return res.send({ data: card });
       }
       return res
-        .status(config.get('NotFound'))
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
