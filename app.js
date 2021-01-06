@@ -1,32 +1,20 @@
 /* eslint-disable no-console */
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
+const config = require('config');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
-const _id = require('./utils/constants.js');
 
-const PORT = process.env.PORT || 3000;
-const { BASE_PATH = `http://localhost:${PORT}` } = process.env;
+const PORT = config.get('PORT') || 3000;
+const BASE_PATH = `http://localhost:${PORT}`;
 const app = express();
 
-async function start() {
-  try {
-    await mongoose.connect('mongodb://localhost:27017/mestodb', {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    });
-    app.listen(PORT, () => {
-      console.log(`the server is running at ${BASE_PATH}`);
-    });
-  } catch (err) {
-    console.error(err);
-  }
-}
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', `${BASE_PATH}`);
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
@@ -35,15 +23,18 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use((req, res, next) => {
-  req.user = _id;
-  next();
-});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
+
 app.use(routerUsers);
 app.use(routerCards);
 app.use(routerError);
 
-start();
+app.use(errorLogger); // log ошибок
+
+app.use(errors()); // ошибки celebrate
+
+module.exports = app;

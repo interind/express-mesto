@@ -1,9 +1,25 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
+const config = require('config');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const {
-  ERROR_CODE_CORRECT,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_DEFAULT,
-} = require('../utils/constants.js');
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : config.get('secretKey'),
+        {
+          expiresIn: '7d',
+        },
+      );
+      res.send({ token });
+    })
+    .catch((err) => res.status(config.get('unAuthorized')).send({ message: err.message }));
+};
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -17,26 +33,44 @@ module.exports.getUser = (req, res) => {
       if (user) {
         return res.send({ data: user });
       }
-      return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'такого пользователя нет' });
+      return res
+        .status(config.get('doNotFind'))
+        .send({ message: 'Такого пользователя нет!⚠️' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: 'Ошибка id пользователя!⚠️' });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body; // нужно хэшировать пароль.
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, 10).then((hash) => User.create({
+    name,
+    about,
+    avatar,
+    email,
+    password: hash,
+  }))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -54,9 +88,11 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -74,8 +110,10 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };

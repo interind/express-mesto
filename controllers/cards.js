@@ -1,19 +1,16 @@
+const config = require('config');
 const Card = require('../models/card');
-const {
-  ERROR_CODE_CORRECT,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_DEFAULT,
-} = require('../utils/constants.js');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
+    .catch((err) => res.status(config.get('default')).send({ message: err.message }));
 };
 
 module.exports.createCard = (req, res) => {
   const owner = req.user._id;
+
   const {
     name, link,
   } = req.body;
@@ -26,9 +23,11 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -39,14 +38,16 @@ module.exports.deleteCard = (req, res) => {
         return res.send({ message: 'карточка удалена' });
       }
       return res
-        .status(ERROR_CODE_NOT_FOUND)
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -61,14 +62,16 @@ module.exports.likeCard = (req, res) => {
         return res.send({ data: card });
       }
       return res
-        .status(ERROR_CODE_NOT_FOUND)
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -83,13 +86,15 @@ module.exports.dislikeCard = (req, res) => {
         return res.send({ data: card });
       }
       return res
-        .status(ERROR_CODE_NOT_FOUND)
+        .status(config.get('doNotFind'))
         .send({ message: 'такой карточки нет' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_CORRECT).send({ message: err.message });
+        return res
+          .status(config.get('badRequest'))
+          .send({ message: err.message });
       }
-      return res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
