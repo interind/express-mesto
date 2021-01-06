@@ -3,8 +3,8 @@
   "mongodbUrl": "mongodb://localhost:27017/mestodb",
   "secretKey": "hello world",
   "PORT": 3000,
-  "BadRequest": 400,
-  "Unauthorized": 401,
+  "badRequest": 400,
+  "unAuthorized": 401,
   "doNotFind": 404,
-  "Default": 500
+  "default": 500
 }

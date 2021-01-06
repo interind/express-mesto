@@ -5,7 +5,7 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(config.get('Default')).send({ message: err.message }));
+    .catch((err) => res.status(config.get('default')).send({ message: err.message }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -24,10 +24,10 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -44,10 +44,10 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -68,10 +68,10 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -92,9 +92,9 @@ module.exports.dislikeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };

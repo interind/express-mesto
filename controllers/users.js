@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const config = require('config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -8,12 +9,16 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, config.get('secretKey'), {
-        expiresIn: '7d',
-      });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : config.get('secretKey'),
+        {
+          expiresIn: '7d',
+        },
+      );
       res.send({ token });
     })
-    .catch((err) => res.status(config.get('Unauthorized')).send({ message: err.message }));
+    .catch((err) => res.status(config.get('unAuthorized')).send({ message: err.message }));
 };
 
 module.exports.getUsers = (req, res) => {
@@ -35,10 +40,10 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: 'Ошибка id пользователя!⚠️' });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -62,10 +67,10 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -84,10 +89,10 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
 
@@ -106,9 +111,9 @@ module.exports.updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(config.get('BadRequest'))
+          .status(config.get('badRequest'))
           .send({ message: err.message });
       }
-      return res.status(config.get('Default')).send({ message: err.message });
+      return res.status(config.get('default')).send({ message: err.message });
     });
 };
