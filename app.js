@@ -9,7 +9,7 @@ const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
 
-const PORT = config.get('PORT') || 3000;
+const PORT = process.env.PORT || config.get('PORT');
 const BASE_PATH = `http://localhost:${PORT}`;
 const app = express();
 
