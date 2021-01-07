@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
-const config = require('config');
 const bodyParser = require('body-parser');
+const config = require('config');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const routerUsers = require('./routes/users.js');
