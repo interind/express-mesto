@@ -32,7 +32,7 @@ app.use(requestLogger);
 app.use(routerUsers);
 app.use(routerCards);
 app.use(routerError);
-
+// тест коммит
 app.use(errorLogger); // log ошибок
 
 app.use(errors()); // ошибки celebrate
