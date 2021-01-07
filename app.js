@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
-const routerAuth = require('./routes/auth.js');
 const routerUsers = require('./routes/users.js');
 const routerCards = require('./routes/cards.js');
 const routerError = require('./routes/error.js');
@@ -30,11 +29,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.use(routerAuth);
 app.use(routerUsers);
 app.use(routerCards);
 app.use(routerError);
-// тест коммит
+
 app.use(errorLogger); // log ошибок
 
 app.use(errors()); // ошибки celebrate
