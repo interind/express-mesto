@@ -11,6 +11,7 @@ async function start() {
   try {
     await mongoose.connect(mongodbUrl, {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
       useCreateIndex: true,
       useFindAndModify: false,
     });
