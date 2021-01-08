@@ -17,7 +17,7 @@ module.exports.login = (req, res, next) => {
           expiresIn: '7d',
         },
       );
-      res.send({ token });
+      res.send({ token, _id: user._id });
     })
     .catch((err) => next(createError(config.get('unAuthorized'), err.message)));
 };

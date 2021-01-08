@@ -8,16 +8,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: 2,
     maxlength: 30,
+    default: 'Alexander',
     required: true,
   },
   about: {
     type: String,
     minlength: 2,
     maxlength: 30,
+    default: 'Student',
     required: true,
   },
   avatar: {
     type: String,
+    default: 'https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1100&q=80',
     required: true,
     validate: {
       validator: (v) => regHttp.test(v),
