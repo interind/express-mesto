@@ -13,4 +13,8 @@ node_modules
 .DS_Store
 .idea
 .vscode
+__test__
+.eslintrc
+.eslintignore
+.editorconfig
 text.md
