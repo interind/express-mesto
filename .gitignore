@@ -8,13 +8,15 @@ node_modules
 # Optional npm cache directory
 .npm
 .env
+.eslintrc
+.eslintignore
+.editorconfig
 
 # Optional REPL history
 .DS_Store
 .idea
 .vscode
-__test__
-.eslintrc
-.eslintignore
-.editorconfig
+*.test.js
+__tests__
+
 text.md
