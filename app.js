@@ -37,5 +37,12 @@ app.use(routerError);
 
 app.use(errorLogger); // log ошибок
 app.use(errors()); // ошибки celebrate
+app.use((error, req, res, next) => {
+  res.status(error.status || config.get('default')).send({
+    status: error.status,
+    message: error.message,
+  });
+  next();
+});
 
 module.exports = app;

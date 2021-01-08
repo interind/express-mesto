@@ -1,10 +1,11 @@
 const { NODE_ENV, JWT_SECRET } = process.env;
 const config = require('config');
 const bcrypt = require('bcryptjs');
+const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -18,36 +19,32 @@ module.exports.login = (req, res) => {
       );
       res.send({ token });
     })
-    .catch((err) => res.status(config.get('unAuthorized')).send({ message: err.message }));
+    .catch((err) => next(createError(config.get('unAuthorized'), err.message)));
 };
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.send({ message: err.name }));
+    .catch(next);
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
         return res.send({ data: user });
       }
-      return res
-        .status(config.get('doNotFind'))
-        .send({ message: 'Такого пользователя нет!⚠️' });
+      throw createError(config.get('doNotFind'), 'Такого пользователя нет!❌');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res
-          .status(config.get('badRequest'))
-          .send({ message: 'Ошибка id пользователя!⚠️' });
+        return next(createError(config.get('badRequest'), 'Ошибка id пользователя!❌'));
       }
-      return res.status(config.get('default')).send({ message: err.message });
+      return next(createError(config.get('default'), err.message));
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -66,15 +63,13 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
-          .status(config.get('badRequest'))
-          .send({ message: err.message });
+        return next(createError(config.get('badRequest'), err.message));
       }
-      return res.status(config.get('default')).send({ message: err.message });
+      return next(createError(config.get('default'), err.message));
     });
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -88,15 +83,13 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
-          .status(config.get('badRequest'))
-          .send({ message: err.message });
+        return next(createError(config.get('badRequest'), err.message));
       }
-      return res.status(config.get('default')).send({ message: err.message });
+      return next(createError(config.get('default'), err.message));
     });
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -110,10 +103,8 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
-          .status(config.get('badRequest'))
-          .send({ message: err.message });
+        return next(createError(config.get('badRequest'), err.message));
       }
-      return res.status(config.get('default')).send({ message: err.message });
+      return next(createError(config.get('default'), err.message));
     });
 };
