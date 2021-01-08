@@ -4,13 +4,14 @@ const config = require('config');
 const app = require('./app.js');
 
 const mongodbUrl = config.get('mongodbUrl');
-const PORT = config.get('PORT') || 3000;
+const PORT = process.env.PORT || config.get('PORT');
 const BASE_PATH = `http://localhost:${PORT}`;
 
 async function start() {
   try {
     await mongoose.connect(mongodbUrl, {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
       useCreateIndex: true,
       useFindAndModify: false,
     });
